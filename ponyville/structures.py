@@ -31,7 +31,7 @@ class Base(object):
 
     def __getattr__(self, name):
         if name in self.api_dict:
-            return self.api_dict
+            return self.api_dict[name]
         else:
             return object(self).__getattr__(name)
 
@@ -49,7 +49,11 @@ class Station(Base):
 class Song(Base):
     def __init__(self, songid):
         json = requests.get("http://ponyvillelive.com/api/song/index/id/%s" %
-                songid)
+                songid).json()
         if json["status"] == "error":
             raise exceptions.SongLookupError()
+
+        json = json["result"]
+
+        Base.__init__(self, json)
 
