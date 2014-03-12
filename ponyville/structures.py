@@ -33,7 +33,11 @@ class Base(object):
         if name in self.api_dict:
             return self.api_dict[name]
         else:
-            return object(self).__getattr__(name)
+            sup = super(object, self)
+            if hasattr(sup, name):
+                return getattr(sup, name)
+            else:
+                raise AttributeError("%s is not an attribute" % name)
 
 class Station(Base):
     def __init__(self, api_dict):
@@ -46,6 +50,10 @@ class Station(Base):
         for song in self.song_history:
             self.play_history.append(Song(song["id"]))
 
+    def __repr__(self):
+        return "<%s: \"%s\": %s>" %\
+                (self.__class__.__name__, self.code, self.name)
+
 class Song(Base):
     def __init__(self, songid):
         json = requests.get("http://ponyvillelive.com/api/song/index/id/%s" %
@@ -56,4 +64,8 @@ class Song(Base):
         json = json["result"]
 
         Base.__init__(self, json)
+
+    def __repr__(self):
+        return "<%s: %s>" %\
+                (self.__class__.__name__, self.text)
 

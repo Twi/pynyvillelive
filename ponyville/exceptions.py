@@ -22,6 +22,9 @@ freely, subject to the following restrictions:
     distribution.
 """
 
+class APIError(Exception):
+    pass
+
 class SongLookupError(Exception):
     pass
 
