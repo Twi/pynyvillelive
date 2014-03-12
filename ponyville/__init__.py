@@ -27,6 +27,13 @@ import requests
 import structures
 
 def now_playing(shortcode=None):
+    """
+    inputs: shortcode of station or None
+    outputs: if shortcode is None, list of all Stations
+             else Station indexed by shortcode
+
+    ***THIS MAY TAKE A LONG TIME***
+    """
     if shortcode == None:
         json = requests.get("http://ponyvillelive.com/api/nowplaying").json()
 
@@ -59,5 +66,9 @@ def now_playing(shortcode=None):
         return structures.Station(json)
 
 def get_song(songid):
-    return Song(songid)
+    """
+    input: songid
+    output: Song object
+    """
+    return structures.Song(songid)
 
